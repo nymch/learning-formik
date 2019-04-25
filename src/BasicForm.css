@@ -1,0 +1,12 @@
+.form-input {
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+  border: 2px solid black;
+  padding: 4px;
+}
+
+.form-error {
+  font-weight: bolder;
+  color: red;
+}
