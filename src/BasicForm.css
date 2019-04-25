@@ -1,7 +1,10 @@
-.form-input {
+.form *{
   font-size: 14px;
-  font-weight: bold;
   color: black;
+  font-weight: bold;
+}
+
+.form-input {
   border: 2px solid black;
   padding: 4px;
 }
@@ -9,4 +12,19 @@
 .form-error {
   font-weight: bolder;
   color: red;
+}
+
+.form-valid {
+  font-weight: bolder;
+  color: green;
+}
+
+.form-button {
+  border: 2px solid black;
+  padding: 4px;
+  background: white;
+}
+
+label {
+  display: block;
 }
