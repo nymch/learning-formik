@@ -13,7 +13,7 @@ const formInitialValues = {
 // self-made validator (not so cool).
 const validate = (values) => {
   const result = _.reduce(values, (col,val,key) => {
-    const valid = scheme[key].test(val);
+    const valid = schema[key].test(val);
     if(!valid){
       return {...col, [key]:'invalid'};
     }
@@ -28,7 +28,7 @@ const regex = {
   date: (separator) => new RegExp(`(19|20)[0-9]{2}\\${separator ? separator : '/'}(0[1-9]|1[0-2])\\${separator ? separator : '/'}(0[1-9]|[1-2][0-9]|3[0-1])`),
 }
 
-const scheme = {
+const schema = {
   handleName: regex.text(20),
   email: regex.text(),
   birthDate: regex.date('/'),
@@ -54,7 +54,9 @@ const BasicForm = () => {
       }}
       validateOnBlur={true}
       validateOnChange={false}
-      onReset={formInitialValues}
+      onReset={(values, actions)=>{
+        actions.setFieldValue(formInitialValues)
+      }}
       render={({ errors, status, touched, isSubmitting, isValid }) => (
         <Form autocomplete="off">
           <div>
@@ -78,6 +80,9 @@ const BasicForm = () => {
           {isValid && <div style={{color:"green",fontSize:16,fontWeight:"bolder"}}>Valid input!</div>}
           <button type="submit" disabled={isSubmitting || !isValid}>
             Submit
+          </button>
+          <button type="reset">
+            Reset
           </button>
         </Form>
       )}/>
