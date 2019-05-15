@@ -1,36 +1,18 @@
 import React from 'react';
-import { Formik, Field, Form } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import FormInitialValues from './FormInitialValues';
-import './Form.css';
+import * as Yup from 'yup';
 import _ from 'lodash';
+import './Form.css';
 
-// self-made validator (not so cool).
-const validate = (values) => {
-  const result = _.reduce(values, (col,val,key) => {
-    const valid = schema[key].test(val);
-    if(!valid){
-      return {...col, [key]:'invalid'};
-    }
-    return col;
-  },{});
-  return result;
-}
+const formSchema = Yup.object().shape({
+  handleName: Yup.string().required('必須です'),
+  email: Yup.string().email('有効なメールアドレスを入力してください').required('必須です'),
+  birthDate: Yup.date().required('必須です').typeError('正しい日付を入力してください'),
+  hobby: Yup.string().required('必須です'),
+})
 
-const regex = {
-  text: (length) => new RegExp(`^[a-zA-Z0-9]${length ? '{1,' + length + '}' : '+'}$`),
-  number: (length) => new RegExp(`^[0-9]${length ? '{1,' + length + '}' : '+'}$`),
-  email: () => new RegExp(`^[a-zA-Z0-9\\.\\-_]+@([a-zA-Z0-9\\-]+\\.)+[a-z]+$`),
-  date: (separator) => new RegExp(`(19|20)[0-9]{2}\\${separator ? separator : '/'}(0[1-9]|1[0-2])\\${separator ? separator : '/'}(0[1-9]|[1-2][0-9]|3[0-1])`),
-}
-
-const schema = {
-  handleName: regex.text(20),
-  email: regex.email(),
-  birthDate: regex.date('/'),
-  hobby: regex.text(100),
-}
-
-const BasicForm = () => {
+const YupValidationForm = () => {
   return (
     <Formik
       initialValues={FormInitialValues}
@@ -44,11 +26,9 @@ const BasicForm = () => {
           }
         },1000);
       }}
-      validate={(values)=>{
-        return validate(values);
-      }}
+      validationSchema={formSchema}
       validateOnBlur={true}
-      validateOnChange={false}
+      validateOnChange={true}
       onReset={(values, actions)=>{
         actions.setFieldValue(FormInitialValues)
       }}
@@ -77,7 +57,7 @@ const BasicForm = () => {
           <div>
             {isSubmitting && <div>submitting.....</div>}
             {status && status.message && <span className="form-error">{status.message}</span>}
-            {isValid && <span className="form-valid">Valid input!</span>}
+            {isValid && !isSubmitting && <span className="form-valid">Valid input!</span>}
             <button type="submit" disabled={isSubmitting || !isValid}>
               Submit
             </button>
@@ -90,4 +70,4 @@ const BasicForm = () => {
   )
 }
 
-export default BasicForm;
+export default YupValidationForm;
